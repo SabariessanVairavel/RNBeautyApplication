@@ -101,7 +101,7 @@ function LipsComponent() {
 
 const onPress = (navigation) => { navigation.navigate("EyeKajal")};
 
-function EyeLinerScreen({ route, navigation }) {
+function EyeLinerScreen({ navigation }) {
   return (
     <View style={{ flex: 1, flexDirection: "row", alignItems: 'center' }}>
       <TouchableOpacity
