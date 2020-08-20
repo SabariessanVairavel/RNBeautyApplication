@@ -1,45 +1,16 @@
 import React, { Component } from 'react';
-import { ImageBackground, TouchableOpacity, StyleSheet, View, Text, Alert, Image, ScrollView } from 'react-native';
+import { TouchableOpacity, StyleSheet, View, Text, Alert, Image } from 'react-native';
 import { RNCamera } from 'react-native-camera';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
-import GlassesFilter from './src/camera/GlassesFilter';
-import ScrollableTabView, { ScrollableTabBar } from 'react-native-scrollable-tab-view-forked';
-import { CameraComponent } from './src/camera/CameraComponent';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
-import { RNFetchBlob } from 'rn-fetch-blob';
-import { FaceDetector } from 'react-native-camera';
+import GlassesFilter from './GlassesFilter';
 
 
 
 const styles = StyleSheet.create({
-  glasses: ({rightEyePosition, leftEyePosition, yawAngle, rollAngle, width,
-    height,
-    x,y}) => {
-    // const width = Math.abs(leftEyePosition.x - rightEyePosition.x) + 150;
-    return {
-      position: 'absolute',
-      top: y,
-      left: x,
-      resizeMode: 'contain',
-      width,
-      transform: [
-        {rotateY: `${yawAngle.toFixed(0)}deg`}, 
-        {rotateZ: `${-rollAngle.toFixed(0)}deg`}],
-    };
-  },
-  face: {
-    padding: 10,
-    borderWidth: 2,
-    borderRadius: 2,
-    position: 'absolute',
-    borderColor: '#FFD700',
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
   container: {
     flex: 1,
     flexDirection: 'column',
@@ -119,34 +90,6 @@ const styles = StyleSheet.create({
   },
 });
 
-var image = { uri: "https://reactjs.org/logo-og.png" };
-
-const GlassesFilter1 = ({
-  rightEyePosition,
-  leftEyePosition,
-  yawAngle,
-  rollAngle,
-  width,
-  height,
-  x,y,
-}) => {
-  return (
-    <View>
-      <Image
-        source={require('./src/images/glasses.png')}
-        style={styles.glasses({
-          rightEyePosition,
-          leftEyePosition,
-          yawAngle,
-          rollAngle,
-          width,
-          height,
-          x,y,
-        })}
-      />
-    </View>
-  );
-};
 
 const BottomEyeTab = createMaterialBottomTabNavigator();
 
@@ -159,17 +102,6 @@ function EyeRoot() {
   );
 }
 
-function EyesComponent({ navigation }) {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>EyesComponent</Text>
-      <Button
-        title="Go to EyeRoot"
-        onPress={() => navigation.navigate('EyeRoot')}
-      />
-    </View>
-  );
-}
 
 function FaceComponent() {
   return (
@@ -187,7 +119,6 @@ function LipsComponent() {
   );
 }
 
-const onPress = (navigation) => { navigation.navigate("EyeKajal")};
 
 function EyeLinerScreen({ navigation }) {
   return (
@@ -283,7 +214,7 @@ function EyeKajalScreen({ navigation }) {
 const Tab = createMaterialTopTabNavigator();
 
 
-class App extends React.Component {
+class App extends Component {
 
   constructor(props) {
     super(props);
@@ -355,28 +286,6 @@ class App extends React.Component {
 
   toggle = value => () => this.setState(prevState => ({ [value]: !prevState[value] }));
 
-  takePictureOld = async() => {
-    if (this.camera) {
-        const options = { quality : 0.5, base64 : true};
-        const data = await this.camera.takePictureAsync(options);
-        console.log(data.base64);
-        // const path = `${RNFetchBlob.fs.dirs.CacheDir}/test.png`;
-        // console.log('path' , path);
-        console.log('base64 Value :' , data.base64);
-        console.log('uri Value :' , data.uri);
-        const source = data.uri;
-        if (source) {
-          await this.camera.pausePreview();
-          console.log("picture source", source);
-        }
-        // try {
-        //     RNFetchBlob.fs.writeFile(path, data.base64, 'base64');
-        // } catch (error) {
-        //     console.log(error.message);
-        // }
-    }
-  }
-
   render() {
     return (
       <View style={styles.container}>
@@ -398,26 +307,22 @@ class App extends React.Component {
           faceDetectionLandmarks={RNCamera.Constants.FaceDetection.Landmarks.all}
         />
         {this.state.box && (
-            <GlassesFilter1
+            <GlassesFilter
               rightEyePosition={this.state.rightEyePosition}
               leftEyePosition={this.state.leftEyePosition}
               rollAngle={this.state.box.rollAngle}
               yawAngle={this.state.box.yawAngle}
-              width={this.state.box.width}
-              height={this.state.box.height}
-              x={this.state.box.x}
-              y={this.state.box.y}
             />
         )}
 
-        {/* <View style={{ flex: 0, flexDirection: "row", justifyContent: "center"}}>
+        <View style={{ flex: 0, flexDirection: "row", justifyContent: "center"}}>
           <TouchableOpacity
             activeOpacity={0.5}
             style={styles.btnAlignment}
             onPress={this.takePicture}>
              <Icon name="camera" size={50} color="#fff" />
           </TouchableOpacity>
-        </View> */}
+        </View>
         <View
             style={{
               backgroundColor: 'transparent',
@@ -432,85 +337,33 @@ class App extends React.Component {
           </TouchableOpacity>
         </View>
       
-      {/* <View style={{ flex: 0, flexDirection: "row", justifyContent: "center"}}>
-        <TouchableOpacity onPress={this.takePicture.bind(this)} styles={styles.capture}>
-            <Text style={{ fontSize: 14 }}>
-                Take Picture
-            </Text>
-        </TouchableOpacity>
-      </View> */}
-
-      <NavigationContainer>
-        <Tab.Navigator
-          initialRouteName="Eyes"
-          tabBarOptions={{
-            activeTintColor: '#e91e63',
-            labelStyle: { fontSize: 12 },
-            style: { backgroundColor: 'powderblue' },
-          }}
-        >
-      <Tab.Screen
-        name="Eyes"
-        component={EyeRoot}
-        options={{ tabBarLabel: 'Eyes' }}
-      />
-      <Tab.Screen
-        name="Face"
-        component={FaceComponent}
-        options={{ tabBarLabel: 'Face' }}
-      />
-      <Tab.Screen
-        name="Lips"
-        component={LipsComponent}
-        options={{ tabBarLabel: 'Lips' }}
-      />
-      </Tab.Navigator>
-    </NavigationContainer>
+        <NavigationContainer>
+            <Tab.Navigator
+            initialRouteName="Eyes"
+            tabBarOptions={{
+                activeTintColor: '#e91e63',
+                labelStyle: { fontSize: 12 },
+                style: { backgroundColor: 'powderblue' },
+            }}
+            >
+        <Tab.Screen
+            name="Eyes"
+            component={EyeRoot}
+            options={{ tabBarLabel: 'Eyes' }}
+        />
+        <Tab.Screen
+            name="Face"
+            component={FaceComponent}
+            options={{ tabBarLabel: 'Face' }}
+        />
+        <Tab.Screen
+            name="Lips"
+            component={LipsComponent}
+            options={{ tabBarLabel: 'Lips' }}
+        />
+        </Tab.Navigator>
+        </NavigationContainer>
       
-      
-      
-      
-      
-      
-      
-      
-      {/* <ScrollableTabView
-              // renderTabBar={false}
-                // <ScrollableTabBar
-                //   style={styles.scrollStyle}
-                //   tabStyle={styles.tabStyle}
-                //   />
-              
-              // tabBarTextStyle={styles.tabBarTextStyle}
-              // tabBarInactiveTextColor={'black'}
-              // tabBarActiveTextColor={'white'}
-              // tabBarUnderlineStyle={styles.underlineStyle}
-              // tabBarPosition={'overlayTop'}
-              initialPage={0}
-              >
-              <ScrollView key={"1"} tabLabel={"Eyes"}>
-                <ImageBackground source={image} style={styles.image}>
-                  <Text style={styles.text}> Eyes </Text>
-                  <ScrollableTabView initialPage={1}>
-                    <ScrollView key={"5"} tabLabel={"Eye Liner"}>
-                      <View>
-                        <Text style={styles.text}> Eye Liner Component </Text>
-                      </View>
-                    </ScrollView>
-                    <ScrollView key={"6"} tabLabel={"Eye Kajal"}>
-                      <View>
-                        <Text style={styles.text}> Eye Kajal Component </Text>
-                      </View>
-                    </ScrollView>
-                </ScrollableTabView>
-                </ImageBackground>
-              </ScrollView>
-
-
-              <ScrollView key={'2'} tabLabel={'Face'}/>
-              <ScrollView key={'3'} tabLabel={'Lips'}/>
-        </ScrollableTabView> */}
-        
       </View>
     )
   }

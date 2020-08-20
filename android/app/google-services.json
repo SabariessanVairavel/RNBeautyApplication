@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "776348144176",
+    "firebase_url": "https://rnbeautyapp.firebaseio.com",
+    "project_id": "rnbeautyapp",
+    "storage_bucket": "rnbeautyapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:776348144176:android:260b25466b510c0c8c13f5",
+        "android_client_info": {
+          "package_name": "com.rnbeautyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "776348144176-6keku3njdefsh16msfgq574h450944gj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbhwQkkg2Z7Dw9VEs17GBACGVax9ZIbyE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "776348144176-6keku3njdefsh16msfgq574h450944gj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
